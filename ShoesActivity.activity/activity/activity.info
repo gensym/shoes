@@ -1,0 +1,7 @@
+[Activity]
+name = Shoes
+service_name = org.laptop.Shoes
+exec = shoes
+icon = activity-shoes.svg
+activity_version = 1
+show_launcher = yes
