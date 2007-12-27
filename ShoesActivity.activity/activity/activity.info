@@ -1,7 +1,7 @@
 [Activity]
 name = Shoes
-service_name = org.laptop.Shoes
+service_name = net.whytheluckystiff.Shoes
 exec = shoes
-icon = activity-shoes.svg
+icon = activity-shoes
 activity_version = 1
 show_launcher = yes
