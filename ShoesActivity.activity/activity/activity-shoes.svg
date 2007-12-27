@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+  <!ENTITY fill_color "#FFFFFF">
+  <!ENTITY stroke_color "#000000">
+]>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="48"
+   height="48"
+   id="svg2">
+  <defs
+     id="defs4" />
+  <g
+     id="layer1">
+    <path
+       d="M 48.1856,24.08392 L 34.192852,30.159456 L 26.984661,43.603827 L 16.882485,32.173377 L 1.8686751,29.472518 L 9.6179351,16.332575 L 7.547082,1.2189819 L 22.438563,4.5285004 L 36.172516,-2.1113551 L 37.626698,13.073983 L 48.1856,24.08392 z"
+       transform="matrix(0.7186442,0,0,0.7186442,6.0143927,9.090838)"
+       id="path2281"
+       style="opacity:1;fill:&fill-color;;fill-opacity:1;fill-rule:nonzero;stroke:&stroke-color;;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+  </g>
+</svg>
