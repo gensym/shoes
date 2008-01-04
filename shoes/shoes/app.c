@@ -11,6 +11,10 @@
 #include "shoes/dialogs.h"
 #include "node.h"
 
+#ifdef OLPC
+#include "shoes/olpc.h"
+#endif
+
 static void
 shoes_app_mark(shoes_app *app)
 {
@@ -1549,7 +1553,8 @@ shoes_app_open(shoes_app *app, char *path)
   gk->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
 #ifdef OLPC
-rb_eval_string("puts Shoes.sugar_bundle_id");
+  if (shoes_sugar_setup(app) != SHOES_OK)
+    QUIT("Failed to set up Sugar hooks.", 0);
 #endif
 
   if (!app->resizable)
