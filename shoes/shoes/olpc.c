@@ -18,7 +18,7 @@ shoes_sugar_setup(shoes_app *app)
 {
   shoes_code code = SHOES_OK;
 
-  if (!shoes_has_sugar_parameters(app))
+  if (shoes_has_sugar_parameters(app) != SHOES_OK)
     QUIT("Missing required Sugar parameters.", 0);
   
 quit:
