@@ -404,3 +404,6 @@ SRC.zip(OBJ).each do |c, o|
 end
 
 # If building for the XO-1, copy the bin subdirectory to ShoesActivity.activity/bin/shoes.
+if ENV['OLPC']
+
+end
