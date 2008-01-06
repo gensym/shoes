@@ -1554,7 +1554,9 @@ shoes_app_open(shoes_app *app, char *path)
 
 #ifdef OLPC
   if (shoes_sugar_setup(app) != SHOES_OK)
+  {
     QUIT("Failed to set up Sugar hooks.", 0);
+  }
 #endif
 
   if (!app->resizable)

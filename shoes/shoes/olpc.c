@@ -11,22 +11,35 @@
 #include "shoes/olpc.h"
 
 static shoes_code
-shoes_has_sugar_parameters(shoes_app *app);
+shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf);
 
 shoes_code
 shoes_sugar_setup(shoes_app *app)
 {
   shoes_code code = SHOES_OK;
-
-  if (shoes_has_sugar_parameters(app) != SHOES_OK)
-    QUIT("Missing required Sugar parameters.", 0);
+  char* bundle_id;
+  char* activity_id;
   
+  if (shoes_get_sugar_parameters(bundle_id, activity_id) != SHOES_OK)
+    code = SHOES_FAIL;
+
 quit:
   return code;
 }
 
 shoes_code
-shoes_has_sugar_parameters(shoes_app *app)
+shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf)
 {
-  return SHOES_FAIL;
+  VALUE bundle_id = rb_eval_string("Shoes.sugar_bundle_id");
+  VALUE activity_id = rb_eval_string("Shoes.sugar_activity_id");
+  shoes_code code = SHOES_FAIL;
+
+  if (bundle_id != Qnil && activity_id != Qnil)
+  {
+    bundle_id_buf = rb_string_value_cstr(&bundle_id);
+    activity_id_buf = rb_string_value_cstr(&activity_id);
+    code = SHOES_OK;
+  }
+
+  return code;
 }
