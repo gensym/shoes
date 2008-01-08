@@ -10,8 +10,16 @@
 #include "shoes/internal.h"
 #include "shoes/olpc.h"
 
+#ifndef SHOES_GTK
+#error Must be building GTK+ Shoes to enable Sugar-specific functionality.
+#endif
+
 static shoes_code
 shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf);
+static shoes_code
+shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *activity_id);
+static gboolean
+shoes_sweeten_window(GtkWidget *widget, gpointer user_data);
 
 shoes_code
 shoes_sugar_setup(shoes_app *app)
@@ -23,11 +31,13 @@ shoes_sugar_setup(shoes_app *app)
   if (shoes_get_sugar_parameters(bundle_id, activity_id) != SHOES_OK)
     code = SHOES_FAIL;
 
+  shoes_attach_sugar_signals(app, bundle_id, activity_id);
+
 quit:
   return code;
 }
 
-shoes_code
+static shoes_code
 shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf)
 {
   VALUE bundle_id = rb_eval_string("Shoes.sugar_bundle_id");
@@ -42,4 +52,19 @@ shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf)
   }
 
   return code;
+}
+
+static shoes_code
+shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *activity_id)
+{
+  shoes_app_gtk *gk = &app->os;
+
+  g_signal_connect(G_OBJECT(gk->window), "realize",
+                   G_CALLBACK(shoes_sweeten_window), app);
+}
+
+static gboolean
+shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
+{
+
 }
