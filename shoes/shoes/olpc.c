@@ -30,10 +30,9 @@ shoes_sugar_setup(shoes_app *app)
   
   if (shoes_get_sugar_parameters(bundle_id, activity_id) != SHOES_OK)
     code = SHOES_FAIL;
+  else
+    shoes_attach_sugar_signals(app, bundle_id, activity_id);
 
-  shoes_attach_sugar_signals(app, bundle_id, activity_id);
-
-quit:
   return code;
 }
 
@@ -61,10 +60,13 @@ shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *ac
 
   g_signal_connect(G_OBJECT(gk->window), "realize",
                    G_CALLBACK(shoes_sweeten_window), app);
+
+  return SHOES_OK;
 }
 
 static gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 {
-
+  g_log(NULL, G_LOG_LEVEL_DEBUG, "sweetening!");
+  return TRUE;
 }
