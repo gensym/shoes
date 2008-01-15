@@ -310,6 +310,8 @@ else
     LINUX_CFLAGS << " -g"
   end
 
+  LINUX_CFLAGS << " -Wall"
+
   case PLATFORM when /darwin/
     DLEXT = "dylib"
     LINUX_CFLAGS << " -DSHOES_QUARTZ -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -fpascal-strings #{Config::CONFIG["CFLAGS"]}"
