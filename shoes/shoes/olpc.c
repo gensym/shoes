@@ -67,6 +67,8 @@ shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *ac
 static gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 {
-  g_log(NULL, G_LOG_LEVEL_DEBUG, "sweetening!");
+  Display *xdisplay = GDK_DISPLAY();
+  Window *xwindow = GDK_DRAWABLE_XID(widget);
+
   return TRUE;
 }
