@@ -153,7 +153,7 @@ shoes_start(char *path, char *uri)
       "DIR = File.expand_path(File.dirname(%%q<%s>));"
       "$:.replace([DIR+'/ruby/lib/'+PLATFORM, DIR+'/ruby/lib', DIR+'/lib']);"
       "require 'shoes';"
-#ifdef OLPC
+#ifdef SUGAR
       "require 'sweetener';"
 #endif
       "DIR;"

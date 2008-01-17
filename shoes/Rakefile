@@ -12,7 +12,7 @@ REVISION = `git rev-list HEAD`.split.length + 1
 VERS = ENV['VERSION'] || "0.r#{REVISION}"
 PKG = "#{NAME}-#{VERS}"
 APPARGS = ENV['APPARGS']
-FLAGS = %w[DEBUG VIDEO OLPC]
+FLAGS = %w[DEBUG VIDEO SUGAR]
 
 BIN = "*.{bundle,jar,o,so,obj,pdb,pch,res,lib,def,exp,exe,ilk}"
 CLEAN.include ["{bin,shoes}/#{BIN}", "dist"]
@@ -156,7 +156,7 @@ task :build => [:build_os, "dist/VERSION.txt"] do
   cp    "CHANGELOG", "dist/CHANGELOG.txt"
   cp    "COPYING", "dist/COPYING.txt"
 
-  if ENV['OLPC']
+  if ENV['SUGAR']
     rm_rf "../ShoesActivity.activity/bin/dist"
     rm_rf "../ShoesActivity.activity/bin/shoes"
     cp_r "dist", "../ShoesActivity.activity/bin"

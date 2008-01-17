@@ -1,11 +1,11 @@
 //
 // shoes/olpc.h
-// Shoes setup code specific to the Sugar graphical interface,
+// Shoeu setup code specific to the Sugar graphical interface,
 // which is used in the OLPC XO-1.
 //
 
-#ifndef SHOES_OLPC_H
-#define SHOES_OLPC_H
+#ifndef SHOES_SUGAR_H
+#define SHOES_SUGAR_H
 
 #include "shoes/code.h"
 

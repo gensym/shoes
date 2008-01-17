@@ -11,7 +11,7 @@
 #include "shoes/dialogs.h"
 #include "node.h"
 
-#ifdef OLPC
+#ifdef SUGAR
 #include "shoes/olpc.h"
 #endif
 
@@ -1552,7 +1552,7 @@ shoes_app_open(shoes_app *app, char *path)
   gtk_window_set_default_icon_from_file(icon_path, NULL);
   gk->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-#ifdef OLPC
+#ifdef SUGAR
   if (shoes_sugar_setup(app) != SHOES_OK)
   {
     QUIT("Failed to set up Sugar hooks.", 0);
