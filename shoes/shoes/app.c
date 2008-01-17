@@ -12,7 +12,7 @@
 #include "node.h"
 
 #ifdef SUGAR
-#include "shoes/olpc.h"
+#include "shoes/sugar.h"
 #endif
 
 static void

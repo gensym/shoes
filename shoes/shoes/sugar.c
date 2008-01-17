@@ -10,7 +10,7 @@
 
 #include "shoes/app.h"
 #include "shoes/internal.h"
-#include "shoes/olpc.h"
+#include "shoes/sugar.h"
 
 #ifndef SHOES_GTK
 #error Must be building GTK+ Shoes to enable Sugar-specific functionality.
