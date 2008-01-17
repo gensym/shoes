@@ -5,6 +5,7 @@
 //
 
 #include <ruby.h>
+#include <X.h>
 
 #include "shoes/app.h"
 #include "shoes/internal.h"
@@ -67,8 +68,10 @@ shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *ac
 static gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 {
-  Display *xdisplay = GDK_DISPLAY();
-  Window *xwindow = GDK_DRAWABLE_XID(widget);
+  GdkWindow *window = widget->get_root_window();
+
+  Display *xdisplay = GDK_WINDOW_XDISPLAY(window);
+  Window *xwindow = GDK_WINDOW_XID(window);
 
   return TRUE;
 }
