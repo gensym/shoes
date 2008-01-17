@@ -1,6 +1,6 @@
 //
 // shoes/olpc.h
-// Shoeu setup code specific to the Sugar graphical interface,
+// Shoes setup code specific to the Sugar graphical interface,
 // which is used in the OLPC XO-1.
 //
 
