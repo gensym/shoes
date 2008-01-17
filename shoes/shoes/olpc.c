@@ -5,7 +5,8 @@
 //
 
 #include <ruby.h>
-#include <X.h>
+#include <X11/Xlib.h>
+#include <X11/X.h>
 
 #include "shoes/app.h"
 #include "shoes/internal.h"
@@ -15,47 +16,13 @@
 #error Must be building GTK+ Shoes to enable Sugar-specific functionality.
 #endif
 
-static shoes_code
-shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf);
-static shoes_code
-shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *activity_id);
 static gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data);
+static shoes_code
+shoes_get_sugar_parameters(char **bundle_id_buf, char **activity_id_buf);
 
 shoes_code
 shoes_sugar_setup(shoes_app *app)
-{
-  shoes_code code = SHOES_OK;
-  char* bundle_id;
-  char* activity_id;
-  
-  if (shoes_get_sugar_parameters(bundle_id, activity_id) != SHOES_OK)
-    code = SHOES_FAIL;
-  else
-    shoes_attach_sugar_signals(app, bundle_id, activity_id);
-
-  return code;
-}
-
-static shoes_code
-shoes_get_sugar_parameters(char *bundle_id_buf, char *activity_id_buf)
-{
-  VALUE bundle_id = rb_eval_string("Shoes.sugar_bundle_id");
-  VALUE activity_id = rb_eval_string("Shoes.sugar_activity_id");
-  shoes_code code = SHOES_FAIL;
-
-  if (bundle_id != Qnil && activity_id != Qnil)
-  {
-    bundle_id_buf = rb_string_value_cstr(&bundle_id);
-    activity_id_buf = rb_string_value_cstr(&activity_id);
-    code = SHOES_OK;
-  }
-
-  return code;
-}
-
-static shoes_code
-shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *activity_id)
 {
   shoes_app_gtk *gk = &app->os;
 
@@ -68,10 +35,59 @@ shoes_attach_sugar_signals(shoes_app *app, char const *bundle_id, char const *ac
 static gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 {
-  GdkWindow *window = widget->get_root_window();
+  GdkWindow *window = gtk_widget_get_root_window(widget);
 
   Display *xdisplay = GDK_WINDOW_XDISPLAY(window);
-  Window *xwindow = GDK_WINDOW_XID(window);
+  Window xwindow = GDK_WINDOW_XID(window);
 
-  return TRUE;
+  char *bundle_id, *activity_id;
+  gboolean retval = TRUE;
+
+  if (shoes_get_sugar_parameters(&bundle_id, &activity_id) == SHOES_OK)
+  {
+    XChangeProperty(
+      xdisplay,
+      xwindow, 
+      XInternAtom(xdisplay, "_SUGAR_BUNDLE_ID", 0),
+      XInternAtom(xdisplay, "STRING", 0),
+      8,
+      PropModeReplace,
+      (unsigned char *)bundle_id,
+      strlen(bundle_id));
+  
+    XChangeProperty(
+      xdisplay,
+      xwindow,
+      XInternAtom(xdisplay, "_SUGAR_ACTIVITY_ID", 0),
+      XInternAtom(xdisplay, "STRING", 0),
+      8,
+      PropModeReplace,
+      (unsigned char *)activity_id,
+      strlen(activity_id));
+  }
+  else
+  {
+    retval = FALSE;
+  }
+
+  return retval;
 }
+
+static shoes_code
+shoes_get_sugar_parameters(char **bundle_id_buf, char **activity_id_buf)
+{
+  VALUE bundle_id = rb_eval_string("Shoes.sugar_bundle_id");
+  VALUE activity_id = rb_eval_string("Shoes.sugar_activity_id");
+
+  shoes_code code = SHOES_FAIL;
+
+  if (bundle_id != Qnil && activity_id != Qnil)
+  {
+    *bundle_id_buf = rb_string_value_cstr(&bundle_id);
+    *activity_id_buf = rb_string_value_cstr(&activity_id);
+    code = SHOES_OK;
+  }
+
+  return code;
+}
+
