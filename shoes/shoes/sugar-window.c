@@ -1,5 +1,5 @@
 //
-// shoes/olpc.c
+// shoes/sugar-window.c
 // Shoes setup code specific to the Sugar graphical interface,
 // which is used in the OLPC XO-1.
 //
@@ -10,7 +10,7 @@
 
 #include "shoes/app.h"
 #include "shoes/internal.h"
-#include "shoes/sugar.h"
+#include "shoes/sugar-window.h"
 
 #ifndef SHOES_GTK
 #error Must be building GTK+ Shoes to enable Sugar-specific functionality.
