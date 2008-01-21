@@ -3,6 +3,9 @@
 // Shoes setup code specific to the Sugar graphical interface,
 // which is used in the OLPC XO-1.
 //
+// This file contains code necessary to set up an X11 window
+// for Sugar.
+//
 
 #include <ruby.h>
 #include <X11/Xlib.h>
@@ -16,23 +19,10 @@
 #error Must be building GTK+ Shoes to enable Sugar-specific functionality.
 #endif
 
-static gboolean
-shoes_sweeten_window(GtkWidget *widget, gpointer user_data);
 static shoes_code
 shoes_get_sugar_parameters(char **bundle_id_buf, char **activity_id_buf);
 
-shoes_code
-shoes_sugar_setup(shoes_app *app)
-{
-  shoes_app_gtk *gk = &app->os;
-
-  g_signal_connect(G_OBJECT(gk->window), "realize",
-                   G_CALLBACK(shoes_sweeten_window), app);
-
-  return SHOES_OK;
-}
-
-static gboolean
+gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 {
   GdkWindow *window = gtk_widget_get_root_window(widget);
