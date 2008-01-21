@@ -7,6 +7,7 @@
 #ifndef SHOES_SUGAR_H
 #define SHOES_SUGAR_H
 
+#include "shoes/app.h"
 #include "shoes/code.h"
 
 shoes_code shoes_sugar_setup(shoes_app *app);
