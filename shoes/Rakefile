@@ -312,6 +312,7 @@ else
 
   LINUX_CFLAGS << " -Wall"
 
+
   case PLATFORM when /darwin/
     DLEXT = "dylib"
     LINUX_CFLAGS << " -DSHOES_QUARTZ -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls -fpascal-strings #{Config::CONFIG["CFLAGS"]}"
@@ -337,6 +338,14 @@ else
     LINUX_LIB_NAMES << "vlc" if ENV['VIDEO']
   end
   LINUX_LIBS = LINUX_LIB_NAMES.map { |x| "-l#{x}" }.join(' ')
+
+  if ENV['SUGAR']
+    SUGAR_CFLAGS = `pkg-config --cflags dbus-1`.strip
+    SUGAR_LIBS = `pkg-config --libs dbus-1`.strip
+
+    LINUX_CFLAGS << " #{SUGAR_CFLAGS}"
+    LINUX_LIBS << " #{SUGAR_LIBS}"
+  end
 
   task :build_os => [:buildenv_linux, :build_skel, "dist/#{NAME}"]
 
