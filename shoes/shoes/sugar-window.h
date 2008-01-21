@@ -11,7 +11,6 @@
 #define SHOES_SUGAR_WINDOW_H
 
 #include <glib.h>
-#include "shoes/code.h"
 
 gboolean shoes_sweeten_window(GtkWidget *widget, gpointer user_data);
 
