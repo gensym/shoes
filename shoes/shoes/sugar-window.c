@@ -13,12 +13,14 @@
 
 #include "shoes/app.h"
 #include "shoes/internal.h"
-#include "shoes/sugar-ruby.h"
 #include "shoes/sugar-window.h"
 
 #ifndef SHOES_GTK
 #error Must be building GTK+ Shoes to enable Sugar-specific functionality.
 #endif
+
+static shoes_code
+shoes_get_sugar_parameters(char **bundle_id_buf, char **activity_id_buf);
 
 gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
@@ -31,13 +33,8 @@ shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
   char *bundle_id, *activity_id;
   gboolean retval = TRUE;
 
-  bundle_id = shoes_get_sugar_bundle_id();
-  activity_id = shoes_get_sugar_activity_id();
-
-  if (bundle_id != NULL && activity_id != NULL)
+  if (shoes_get_sugar_parameters(&bundle_id, &activity_id) == SHOES_OK)
   {
-    printf("Sugar: bundle id=%s, activity id=%s\n", bundle_id, activity_id);
-
     XChangeProperty(
       xdisplay,
       xwindow, 
@@ -65,3 +62,22 @@ shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 
   return retval;
 }
+
+static shoes_code
+shoes_get_sugar_parameters(char **bundle_id_buf, char **activity_id_buf)
+{
+  VALUE bundle_id = rb_eval_string("Shoes.sugar_bundle_id");
+  VALUE activity_id = rb_eval_string("Shoes.sugar_activity_id");
+
+  shoes_code code = SHOES_FAIL;
+
+  if (bundle_id != Qnil && activity_id != Qnil)
+  {
+    *bundle_id_buf = rb_string_value_cstr(&bundle_id);
+    *activity_id_buf = rb_string_value_cstr(&activity_id);
+    code = SHOES_OK;
+  }
+
+  return code;
+}
+

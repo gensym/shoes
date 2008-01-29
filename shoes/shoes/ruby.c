@@ -9,11 +9,6 @@
 #include "shoes/internal.h"
 #include "shoes/world.h"
 #include "shoes/version.h"
-
-#ifdef SUGAR
-#include "shoes/sugar-ruby.h"
-#endif
-
 #include <math.h>
 
 VALUE cShoes, cApp, cDialog, cShoesWindow, cMouse, cCanvas, cFlow, cStack, cMask, cWidget, cShape, cImage, cVideo, cTimerBase, cTimer, cEvery, cAnim, cPattern, cBorder, cBackground, cTextBlock, cPara, cBanner, cTitle, cSubtitle, cTagline, cCaption, cInscription, cTextClass, cSpan, cDel, cStrong, cSub, cSup, cCode, cEm, cIns, cLinkUrl, cNative, cButton, cCheck, cRadio, cEditLine, cEditBox, cListBox, cProgress, cColor, cColors, cLink, cLinkHover;
@@ -4358,8 +4353,4 @@ shoes_ruby_init()
   rb_define_method(rb_mKernel, "ask_color", CASTHOOK(shoes_dialog_color), 1);
   rb_define_method(rb_mKernel, "ask_open_file", CASTHOOK(shoes_dialog_open), 0);
   rb_define_method(rb_mKernel, "ask_save_file", CASTHOOK(shoes_dialog_save), 0);
-  
-#ifdef SUGAR
-  shoes_intern_sugar_symbols();
-#endif
 }
