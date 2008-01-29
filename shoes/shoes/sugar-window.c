@@ -36,8 +36,6 @@ shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 
   if (bundle_id != NULL && activity_id != NULL)
   {
-    printf("Sugar: bundle id=%s, activity id=%s\n", bundle_id, activity_id);
-
     XChangeProperty(
       xdisplay,
       xwindow, 
