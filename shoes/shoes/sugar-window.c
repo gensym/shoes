@@ -23,10 +23,8 @@
 gboolean
 shoes_sweeten_window(GtkWidget *widget, gpointer user_data)
 {
-  GdkWindow *window = gtk_widget_get_root_window(widget);
-
-  Display *xdisplay = GDK_WINDOW_XDISPLAY(window);
-  Window xwindow = GDK_WINDOW_XID(window);
+  Display *xdisplay = GDK_WINDOW_XDISPLAY(widget->window);
+  Window xwindow = GDK_WINDOW_XID(widget->window);
 
   char *bundle_id, *activity_id;
   gboolean retval = TRUE;
