@@ -7,6 +7,7 @@
 // for Sugar interprocess communication.
 //
 #include <glib.h>
+#include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
 #include "shoes/sugar-ruby.h"
@@ -29,7 +30,7 @@ shoes_sugar_setup_dbus(shoes_app *app)
     return SHOES_FAIL;
   }
 
-  dbus_bus_add_match(bus, "type='signal',interface='org.laptop.Activity'");
+  dbus_bus_add_match(bus, "type='signal',interface='org.laptop.Activity'", NULL);
   dbus_connection_add_filter(bus, shoes_sugar_dbus_filter, NULL, NULL);
 
   return SHOES_OK;
@@ -38,5 +39,6 @@ shoes_sugar_setup_dbus(shoes_app *app)
 static DBusHandlerResult
 shoes_sugar_dbus_filter(DBusConnection *connection, DBusMessage *message, void *user_data)
 {
+  printf("connection=%p, message=%p\n", connection, message);
   return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
