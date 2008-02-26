@@ -1,7 +1,7 @@
 require 'dbus'
 
 class Shoes
-  class SugarDBusService < ::DBus::Object
+  class SugarDBusService < DBus::Object
     include Singleton
 
     attr_accessor :on_set_active
@@ -15,9 +15,10 @@ class Shoes
     end
 
     def initialize
-      @service = make_service
       super(object_path)
-    end
+      @service = make_service
+      @service.export(self)
+    end 
 
     private
 
