@@ -1,7 +1,6 @@
 //
 // shoes/sugar.c
-// Shoes setup code specific to the Sugar graphical interface,
-// which is used in the OLPC XO-1.
+// Shoes setup code specific to the Sugar UI, which is used in the OLPC XO-1.
 //
 
 #include "sugar.h"
@@ -18,4 +17,3 @@ shoes_sugar_setup(shoes_app *app)
 
   return code;
 }
-

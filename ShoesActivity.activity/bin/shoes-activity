@@ -40,8 +40,8 @@ echo
 echo SUGAR_ACTIVITY_ROOT=$SUGAR_ACTIVITY_ROOT
 echo
 
-# do not crash on dbus errors
-export DBUS_FATAL_WARNINGS=0
+# ensure DBus errors catch our attention
+export DBUS_FATAL_WARNINGS=1
 
 # run Shoes
 exec bin/shoes/shoes \

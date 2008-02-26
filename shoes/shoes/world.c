@@ -155,6 +155,7 @@ shoes_start(char *path, char *uri)
       "require 'shoes';"
 #ifdef SUGAR
       "require 'sweetener';"
+      "require 'shoes-dbus';"
 #endif
       "DIR;"
     "rescue Object => e;"

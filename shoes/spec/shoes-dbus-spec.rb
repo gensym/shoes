@@ -14,7 +14,7 @@ describe "A SugarDBusService D-Bus exported object" do
     @example_activity_id = '12345'
     
     flexmock(Shoes).should_receive(:sugar_activity_id).and_return(@example_activity_id)
-    flexmock(DBus::SystemBus).should_receive(:instance).and_return(bus)
+    flexmock(DBus::SessionBus).should_receive(:instance).and_return(bus)
     bus.should_receive(:request_service).with("org.laptop.Activity#{@example_activity_id}")
 
     @dbus_object = Shoes::SugarDBusService.instance
@@ -46,6 +46,33 @@ describe "A SugarDBusService D-Bus exported object" do
     methods.should include(:Invite)
     methods[:Invite].params.length.should == 1
     methods[:Invite].params.should include(['buddy_key', 's'])
+  end
+
+  it 'should invoke on_set_active callback when SetActive is called' do
+    called = false
+    @dbus_object.on_set_active = lambda { |active| called = active }
+    @dbus_object.send('org.laptop.Activity%%SetActive', true)
+    called.should == true
+  end
+
+  it 'should invoke on_invite callback when Invite is called' do
+    buddy_key = nil
+    @dbus_object.on_invite = lambda { |key| buddy_key = key }
+    @dbus_object.send('org.laptop.Activity%%Invite', '12345')
+    buddy_key.should == '12345'
+  end
+
+  it 'should invoke on_take_screenshot callback when TakeScreenshot is called' do
+    screenshot = false
+    @dbus_object.on_take_screenshot = lambda { || screenshot = true }
+    @dbus_object.send('org.laptop.Activity%%TakeScreenshot')
+    screenshot.should == true
+  end
+
+  it 'should provide null functions for callbacks by default' do
+    @dbus_object.send('org.laptop.Activity%%SetActive', true)
+    @dbus_object.send('org.laptop.Activity%%Invite', '12345')
+    @dbus_object.send('org.laptop.Activity%%TakeScreenshot')
   end
 end
 
