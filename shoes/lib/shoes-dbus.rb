@@ -23,7 +23,7 @@ class Shoes
     private
 
     def make_service
-      ::DBus::SessionBus.instance.request_service("org.laptop.Activity#{Shoes.sugar_activity_id}")
+      DBus::SessionBus.instance.request_service("org.laptop.Activity#{Shoes.sugar_activity_id}")
     end
 
     def object_path

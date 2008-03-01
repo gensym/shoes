@@ -11,11 +11,13 @@ end
 describe "A SugarDBusService D-Bus exported object" do
   before :each do
     bus = flexmock('bus')
+    service = flexmock('service')
     @example_activity_id = '12345'
     
     flexmock(Shoes).should_receive(:sugar_activity_id).and_return(@example_activity_id)
     flexmock(DBus::SessionBus).should_receive(:instance).and_return(bus)
-    bus.should_receive(:request_service).with("org.laptop.Activity#{@example_activity_id}")
+    bus.should_receive(:request_service).with("org.laptop.Activity#{@example_activity_id}").and_return(@service)
+    service.should_receive(:export).once
 
     @dbus_object = Shoes::SugarDBusService.instance
   end
