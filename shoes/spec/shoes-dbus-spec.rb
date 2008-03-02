@@ -16,8 +16,8 @@ describe "A SugarDBusService D-Bus exported object" do
     
     flexmock(Shoes).should_receive(:sugar_activity_id).and_return(@example_activity_id)
     flexmock(DBus::SessionBus).should_receive(:instance).and_return(bus)
-    bus.should_receive(:request_service).with("org.laptop.Activity#{@example_activity_id}").and_return(@service)
-    service.should_receive(:export).once
+    bus.should_receive(:request_service).with("org.laptop.Activity#{@example_activity_id}").and_return(service)
+    service.should_receive(:export).with(Shoes::SugarDBusService.instance)
 
     @dbus_object = Shoes::SugarDBusService.instance
   end
