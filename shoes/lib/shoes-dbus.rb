@@ -9,9 +9,9 @@ class Shoes
     attr_accessor :on_take_screenshot
 
     dbus_interface 'org.laptop.Activity' do
-      dbus_method(:SetActive, 'in active:b') { |active| on_set_active.call(active) }
-      dbus_method(:Invite, 'in buddy_key:s') { |key| on_invite.call(key) }
-      dbus_method(:TakeScreenshot, '') { || on_take_screenshot.call }
+      dbus_method('SetActive', 'in active:b') { |active| on_set_active.call(active) }
+      dbus_method('Invite', 'in buddy_key:s') { |key| on_invite.call(key) }
+      dbus_method('TakeScreenshot', '') { || on_take_screenshot.call }
     end
 
     def initialize
