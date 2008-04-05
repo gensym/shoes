@@ -155,6 +155,13 @@ task :build => [:build_os, "dist/VERSION.txt"] do
   cp    "README", "dist/README.txt"
   cp    "CHANGELOG", "dist/CHANGELOG.txt"
   cp    "COPYING", "dist/COPYING.txt"
+
+  if ENV['OLPC']
+    rm_rf "../ShoesActivity.activity/bin/dist"
+    rm_rf "../ShoesActivity.activity/bin/shoes"
+    cp_r "dist", "../ShoesActivity.activity/bin"
+    mv "../ShoesActivity.activity/bin/dist", "../ShoesActivity.activity/bin/shoes"
+  end
   
   case PLATFORM when /darwin/
     rm_rf "#{APPNAME}.app"
@@ -401,9 +408,4 @@ end
 # shoes is small, if any include changes, go ahead and build from scratch.
 SRC.zip(OBJ).each do |c, o|
   file o => [c] + Dir["shoes/*.h"]
-end
-
-# If building for the XO-1, copy the bin subdirectory to ShoesActivity.activity/bin/shoes.
-if ENV['OLPC']
-
 end
