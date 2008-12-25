@@ -1,0 +1,7 @@
+The following packages are required by Shoes for Sugar, but are not provided on the XO-1 default install:
+
+libjpeg-devel rubygems rubygem-rake gtk2-devel ruby-devel pango-devel cairo-devel giflib-devel
+
+You can use yum to install all of these dependencies.
+
+To enable Sugar-specific functionality in the Shoes toolkit, Set the SUGAR environment variable before running rake.

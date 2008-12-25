@@ -10,6 +10,10 @@
 #include "shoes/world.h"
 #include "shoes/native.h"
 
+#ifdef SUGAR
+#include "shoes/sugar.h"
+#endif
+
 static void
 shoes_app_mark(shoes_app *app)
 {
@@ -228,6 +232,132 @@ shoes_app_open(shoes_app *app, char *path)
   code = shoes_native_app_open(app, path, dialog);
   if (code != SHOES_OK)
     return code;
+
+#ifdef SHOES_GTK
+  char icon_path[SHOES_BUFSIZE];
+  shoes_app_gtk *gk = &app->os;
+  shoes_slot_gtk *gs = &app->slot;
+
+  sprintf(icon_path, "%s/static/shoes-icon.png", shoes_world->path);
+  gtk_window_set_default_icon_from_file(icon_path, NULL);
+  gk->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+#ifdef SUGAR
+  if (shoes_sugar_setup(app) != SHOES_OK)
+  {
+    QUIT("Failed to set up Sugar hooks.", 0);
+  }
+#endif
+
+  if (!app->resizable)
+    gtk_window_set_resizable(GTK_WINDOW(gk->window), FALSE);
+  g_signal_connect(G_OBJECT(gk->window), "size-allocate",
+                   G_CALLBACK(shoes_app_gtk_paint), app);
+  g_signal_connect(G_OBJECT(gk->window), "motion-notify-event", 
+                   G_CALLBACK(shoes_app_gtk_motion), app);
+  g_signal_connect(G_OBJECT(gk->window), "key-press-event",
+                   G_CALLBACK(shoes_app_gtk_keypress), app);
+  g_signal_connect(G_OBJECT(gk->window), "delete-event",
+                   G_CALLBACK(shoes_app_gtk_quit), app);
+  app->slot.canvas = gk->window;
+#endif
+
+#ifdef SHOES_QUARTZ
+  const EventTypeSpec  windowEvents[]  =   {   
+    { kEventClassCommand,   kEventCommandProcess },
+    { kEventClassTextInput, kEventTextInputUpdateActiveInputArea },
+    { kEventClassTextInput, kEventTextInputUnicodeForKeyEvent },
+    { kEventClassMouse,    kEventMouseMoved },
+    { kEventClassMouse,    kEventMouseDragged },
+    { kEventClassMouse,    kEventMouseDown },
+    { kEventClassMouse,    kEventMouseUp },
+    { kEventClassWindow,   kEventWindowBoundsChanged },
+    { kEventClassWindow,   kEventWindowClose }
+  };
+
+  Rect                   gRect;
+  static EventHandlerUPP gTestWindowEventProc = NULL;
+  OSStatus               err;
+  EventLoopTimerRef      rubyTimer;
+
+  app->slot.controls = Qnil;
+  SetRect(&gRect, 100, 100, app->width + 100, app->height + 100);
+
+  INFO("Draw QUARTZ window.\n");
+  err = CreateNewWindow(kDocumentWindowClass,
+      kWindowCompositingAttribute
+    | kWindowStandardHandlerAttribute
+    | (app->resizable ? (kWindowLiveResizeAttribute | kWindowStandardDocumentAttributes) :
+      kWindowStandardFloatingAttributes),
+    &gRect,
+    &app->os.window);
+
+  if (err != noErr)
+  {
+    QUIT("Couldn't make a new window.");
+  }
+
+  InitCursor();
+
+  gTestWindowEventProc = NewEventHandlerUPP(shoes_app_quartz_handler);
+  if (gTestWindowEventProc == NULL)
+  {
+    QUIT("Out of memory.");
+  }
+
+  INFO("Event handler.\n");
+  err = InstallWindowEventHandler(app->os.window,
+    gTestWindowEventProc, GetEventTypeCount(windowEvents),
+    windowEvents, app, NULL);
+
+  err = InstallEventLoopIdleTimer(GetMainEventLoop(),
+   kEventDurationNoWait, 10 * kEventDurationMillisecond,
+   NewEventLoopIdleTimerUPP(shoes_app_quartz_idle),
+   0, &rubyTimer);
+
+  HIViewFindByID(HIViewGetRoot(app->os.window), kHIViewWindowContentID, &app->slot.view);
+#endif
+
+#ifdef SHOES_WIN32
+  RECT rect;
+
+  app->slot.controls = Qnil;
+  app->slot.focus = Qnil;
+  app->os.ctrlkey = false;
+  app->os.altkey = false;
+  app->os.shiftkey = false;
+
+  // remove the menu
+  rect.left = 0;
+  rect.top = 0;
+  rect.right = app->width;
+  rect.bottom = app->height;
+  AdjustWindowRect(&rect, WINDOW_STYLE, FALSE);
+
+  app->slot.window = CreateWindowEx(
+    dialog ? WS_EX_WINDOWEDGE : WS_EX_CLIENTEDGE,
+    SHOES_SHORTNAME, SHOES_APPNAME,
+    WINDOW_STYLE | WS_CLIPCHILDREN |
+      (app->resizable ? (WS_THICKFRAME | WS_MAXIMIZEBOX) : WS_DLGFRAME) |
+      WS_VSCROLL | ES_AUTOVSCROLL,
+    CW_USEDEFAULT, CW_USEDEFAULT,
+    rect.right-rect.left, rect.bottom-rect.top,
+    HWND_DESKTOP,
+    NULL,
+    shoes_world->os.instance,
+    NULL);
+
+  SetWindowLong(app->slot.window, GWL_USERDATA, (long)app);
+
+  SCROLLINFO si;
+  si.cbSize = sizeof(SCROLLINFO);
+  si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
+  si.nMin = 0;
+  si.nMax = 0; 
+  si.nPage = 0;
+  si.nPos = 0;
+  SetScrollInfo(app->slot.window, SB_VERT, &si, TRUE);
+#endif
 
   shoes_app_title(app, app->title);
   if (app->slot != NULL) shoes_native_slot_reset(app->slot);

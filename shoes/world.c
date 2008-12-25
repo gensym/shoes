@@ -169,6 +169,10 @@ shoes_start(char *path, char *uri)
       "DIR = File.expand_path(File.dirname(%%q<%s>));"
       "$:.replace([DIR+'/ruby/lib/'+PLATFORM, DIR+'/ruby/lib', DIR+'/lib', '.']);"
       "require 'shoes';"
+#ifdef SUGAR
+      "require 'sweetener';"
+      "require 'shoes-dbus';"
+#endif
       "DIR;"
     "rescue Object => e;"
       "puts(e.message);"

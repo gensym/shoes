@@ -14,7 +14,7 @@ REVISION = (`#{ENV['GIT'] || "git"} rev-list HEAD`.split.length + 1).to_s
 VERS = ENV['VERSION'] || "0.r#{REVISION}"
 PKG = "#{NAME}-#{VERS}"
 APPARGS = ENV['APPARGS']
-FLAGS = %w[DEBUG VIDEO]
+FLAGS = %w[DEBUG VIDEO SUGAR]
 VLC_VERSION = (RUBY_PLATFORM =~ /win32/ ? "0.8": `vlc --version 2>/dev/null`.split[2])
 VLC_0_8 = VLC_VERSION !~ /^0\.9/
 
@@ -190,6 +190,13 @@ task :build => [:build_os, "dist/VERSION.txt"] do
   cp    "README", "dist/README.txt"
   cp    "CHANGELOG", "dist/CHANGELOG.txt"
   cp    "COPYING", "dist/COPYING.txt"
+
+  if ENV['SUGAR']
+    rm_rf "../ShoesActivity.activity/bin/dist"
+    rm_rf "../ShoesActivity.activity/bin/shoes"
+    cp_r "dist", "../ShoesActivity.activity/bin"
+    mv "../ShoesActivity.activity/bin/dist", "../ShoesActivity.activity/bin/shoes"
+  end
   
   case RUBY_PLATFORM when /darwin/
     rm_rf "#{APPNAME}.app"
@@ -351,6 +358,8 @@ else
   else
     LINUX_CFLAGS << " -O "
   end
+
+  LINUX_CFLAGS << " -Wall"
 
   case RUBY_PLATFORM when /darwin/
     DLEXT = "dylib"

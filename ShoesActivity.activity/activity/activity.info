@@ -1,0 +1,7 @@
+[Activity]
+name = Shoes
+service_name = net.whytheluckystiff.Shoes
+exec = shoes-activity
+icon = activity-shoes
+activity_version = 1
+show_launcher = yes
